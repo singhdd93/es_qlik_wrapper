@@ -1,4 +1,4 @@
-#ES_QLIK_WRAPPER
+# ES_QLIK_WRAPPER
 This Python project es a simple wrapper to use ElasticSearch scrolling API into QLIKSENSE
 
 This project has been tested with Elasticsearch 6.4 and QLIK Sense Desktop September 2018
@@ -36,7 +36,7 @@ In the body you'll be able to add your ES Query inside the parameter *es_params*
 ```
 In order to follow the standard you should add the *Content-Type* header as *application/json*
 
-##TODO
+## TODO
 
 - Modify the wrapper to support https in elasticsearch
 - Enable https/basic auth on the frontend
