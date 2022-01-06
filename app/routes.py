@@ -3,10 +3,13 @@ import sys
 from app import app
 from flask import request, jsonify
 import requests
+from requests.auth import HTTPBasicAuth
 import json
 import os
 
 ES_HOST = os.getenv('ES_HOST',"http://localhost:9200")
+USERNAME = os.getenv('USERNAME',"username")
+PASSWORD = os.getenv('PASSWORD',"password")
 
 
 @app.route('/<idx>', methods=['POST'])
@@ -18,10 +21,10 @@ def index(idx=""):
             if not 'es_params' in req:
                 return "Expected es_params", 400
             data = req['es_params']
-            r = requests.post('{}/{}/_search?scroll=1m'.format(ES_HOST, idx), json=data)
+            r = requests.post('{}/{}/_search?scroll=1m'.format(ES_HOST, idx), json=data, auth=(USERNAME, PASSWORD))
         else:
             data = {"scroll": "1m", "scroll_id": req["_scroll_id"]}
-            r = requests.post('{}/_search/scroll'.format(ES_HOST), json=data)
+            r = requests.post('{}/_search/scroll'.format(ES_HOST), json=data, auth=(USERNAME, PASSWORD))
         result = r.json()
 
         if len(result['hits']['hits']) == 0:
@@ -41,7 +44,7 @@ def index(idx=""):
 @app.route('/<idx>/<scroll_id>', methods=['GET', 'POST'])
 def get(idx="", scroll_id=""):
     data = {"scroll": "1m", "scroll_id": scroll_id}
-    r = requests.post('{}/_search/scroll'.format(ES_HOST), json=data)
+    r = requests.post('{}/_search/scroll'.format(ES_HOST), json=data, auth=(USERNAME, PASSWORD))
     result = r.json()
     if len(result['hits']['hits']) == 0:
         del result['_scroll_id']
